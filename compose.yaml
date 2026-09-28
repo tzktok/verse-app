@@ -1,0 +1,31 @@
+﻿services:
+  db:
+    image: postgres:17-alpine
+    environment:
+      POSTGRES_USER: verse
+      POSTGRES_PASSWORD: verse_dev_password
+      POSTGRES_DB: verse
+    ports:
+      - "127.0.0.1:5432:5432"
+    volumes:
+      - verse-postgres:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U verse"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+  server:
+    build: .
+    env_file: .env
+    environment:
+      DATABASE_URL: postgres://verse:verse_dev_password@db:5432/verse
+      HOST: 0.0.0.0
+      PORT: 8787
+    ports:
+      - "8787:8787"
+    depends_on:
+      db:
+        condition: service_healthy
+    restart: unless-stopped
+volumes:
+  verse-postgres:
