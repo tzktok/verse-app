@@ -1,3 +1,6 @@
-node_modules
+.venv
+__pycache__
+*.pyc
 .env
-*.test.mjs
+tests/
+requirements-dev.txt

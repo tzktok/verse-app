@@ -1,7 +1,7 @@
-FROM node:22-alpine
+FROM python:3.12-slim
 WORKDIR /app
-COPY package.json package-lock.json ./
-RUN npm ci --omit=dev
+COPY requirements.txt ./
+RUN pip install --no-cache-dir -r requirements.txt
 COPY . .
 EXPOSE 8787
-CMD ["node", "server.mjs"]
+CMD ["python", "main.py"]
